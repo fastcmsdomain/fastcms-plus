@@ -6,6 +6,12 @@ export default function decorate(block) {
   const accordionItems = block.querySelectorAll(':scope > div');
 
   accordionItems.forEach((item, index) => {
+    // Check if the item has the expected structure
+    if (item.children.length < 2) {
+      console.warn(`Accordion item ${index} does not have the expected structure. Skipping.`);
+      return;
+    }
+
     const [header, content] = item.children;
 
     // Create accordion item structure
@@ -37,8 +43,10 @@ export default function decorate(block) {
         if (index !== otherIndex) {
           const otherHeader = otherItem.querySelector('.accordion-header');
           const otherContent = otherItem.querySelector('.accordion-content');
-          otherHeader.setAttribute('aria-expanded', 'false');
-          otherContent.hidden = true;
+          if (otherHeader && otherContent) {
+            otherHeader.setAttribute('aria-expanded', 'false');
+            otherContent.hidden = true;
+          }
         }
       });
 
@@ -61,12 +69,10 @@ export default function decorate(block) {
   });
 
   // Open the first accordion by default
-  if (accordionItems.length > 0) {
-    const firstHeader = block.querySelector('.accordion-header');
-    const firstContent = block.querySelector('.accordion-content');
-    if (firstHeader && firstContent) {
-      firstHeader.setAttribute('aria-expanded', 'true');
-      firstContent.hidden = false;
-    }
+  const firstHeader = block.querySelector('.accordion-header');
+  const firstContent = block.querySelector('.accordion-content');
+  if (firstHeader && firstContent) {
+    firstHeader.setAttribute('aria-expanded', 'true');
+    firstContent.hidden = false;
   }
 }
