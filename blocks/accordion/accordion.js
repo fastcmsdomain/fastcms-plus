@@ -31,7 +31,7 @@ export default function decorate(block) {
     accordionContent.className = 'accordion-content';
     accordionContent.id = `accordion-content-${index}`;
     accordionContent.setAttribute('aria-labelledby', `accordion-item-${index}`);
-    accordionContent.hidden = true;
+    accordionContent.style.display = 'none';
     accordionContent.innerHTML = content.innerHTML;
 
     // Add click event to toggle accordion
@@ -45,14 +45,14 @@ export default function decorate(block) {
           const otherContent = otherItem.querySelector('.accordion-content');
           if (otherHeader && otherContent) {
             otherHeader.setAttribute('aria-expanded', 'false');
-            otherContent.hidden = true;
+            otherContent.style.display = 'none';
           }
         }
       });
 
       // Toggle current accordion
       accordionHeader.setAttribute('aria-expanded', !isExpanded);
-      accordionContent.hidden = isExpanded;
+      accordionContent.style.display = isExpanded ? 'none' : 'block';
 
       // Smooth scroll to the header if it's being opened
       if (!isExpanded) {
@@ -73,6 +73,6 @@ export default function decorate(block) {
   const firstContent = block.querySelector('.accordion-content');
   if (firstHeader && firstContent) {
     firstHeader.setAttribute('aria-expanded', 'true');
-    firstContent.hidden = false;
+    firstContent.style.display = 'block';
   }
 }

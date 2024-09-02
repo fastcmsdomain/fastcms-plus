@@ -12,9 +12,11 @@
   background-color: #f5f5f5;
   padding: 10px 15px;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: background-color 0.3s ease;
 }
 
 .accordion-header:hover {
@@ -23,19 +25,29 @@
 
 .accordion-header::after {
   content: '+';
+  float: right;
   font-size: 18px;
   transition: transform 0.3s ease;
 }
 
-.accordion-header.active::after {
+.accordion-header[aria-expanded="true"]::after {
   transform: rotate(45deg);
 }
 
 .accordion-content {
-  display: none;
   padding: 15px;
+  background-color: #fff;
+  border-top: 1px solid #ddd;
 }
 
-.accordion-content.active {
-  display: block;
+/* Animation for smooth open/close transition */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease;
+}
+
+.accordion-content[style="display: block;"] {
+  max-height: 1000px; /* Adjust this value based on your maximum content height */
+  transition: max-height 0.5s ease-in, padding 0.3s ease;
 }
