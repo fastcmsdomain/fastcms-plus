@@ -1,3 +1,13 @@
+function loadGoogleMapsScript(callback) {
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDVMw03kp6ApXjoIThFfXOYe3arE3U_Lgg&callback=initMap`;
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+  
+  window.initMap = callback;
+}
+
 export default function decorate(block) {
   const mapDiv = block.querySelector('div');
   if (!mapDiv) return;
@@ -17,14 +27,8 @@ export default function decorate(block) {
   mapDiv.classList.add('maps-container');
   block.classList.add('maps-block');
 
-  // Load Google Maps API
-  const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDVMw03kp6ApXjoIThFfXOYe3arE3U_Lgg&callback=initMap_${mapId}`;
-  script.async = true;
-  script.defer = true;
-
   // Define the initMap function
-  window[`initMap_${mapId}`] = function() {
+  function initializeMap() {
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode({ address: location }, (results, status) => {
       if (status === 'OK' && results[0]) {
@@ -41,8 +45,8 @@ export default function decorate(block) {
         mapDiv.textContent = 'Could not load map';
       }
     });
-  };
+  }
 
-  // Append the script to the document
-  document.head.appendChild(script);
+  // Load Google Maps API and initialize the map
+  loadGoogleMapsScript(initializeMap);
 }
