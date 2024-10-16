@@ -1,5 +1,5 @@
 const WEBPAGETEST_CONFIG = {
-  API_KEY: 'YOUR_API_KEY_HERE', // Replace with your actual API key
+  API_KEY: 'AIzaSyDB9DYkn6l40rKU9bHDpmqT7vzbicA6sjk', // Replace with your actual API key
   API_URL: 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed',
   ERROR_MESSAGE: 'Error fetching Lighthouse scores:',
   CATEGORIES: ['performance', 'accessibility', 'best-practices', 'seo'],
