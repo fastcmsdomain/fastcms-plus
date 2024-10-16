@@ -2,7 +2,6 @@
     0% { --percentage: 0; }
     100% { --percentage: var(--value); }
 }
-
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -23,10 +22,10 @@
 .webpagetest {
     background-color: var(--color-nocturnal-blue);
     display: grid;
+    gap: var(--spacing-m);
     grid-template-columns: repeat(2, 1fr);
     justify-content: center;
     padding: var(--spacing-m);
-    gap: var(--spacing-m);
 }
 
 .webpagetest .score-value {
@@ -36,9 +35,9 @@
 .webpagetest h4 {
     color: var(--color-white);
     font-size: var(--body-font-size-s);
+    margin-top: var(--spacing-xs);
     text-align: center;
     text-transform: capitalize;
-    margin-top: var(--spacing-xs);
 }
 
 .score-value {
@@ -47,29 +46,29 @@
     --orange: #fa3;
     --red: #f33;
     --grey: var(--color-wild-seal);
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    position: relative;
-    overflow: hidden;
-    display: flex;
     align-items: center;
+    border-radius: 50%;
+    display: flex;
+    height: 80px;
     justify-content: center;
     margin-inline: auto;
+    overflow: hidden;
+    position: relative;
+    width: 80px;
 }
 
 .score-value::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    mask: radial-gradient(at 50% 50%, #0000 64%, #000 64%);
-    mask-mode: alpha;
     -webkit-mask: radial-gradient(at 50% 50%, #0000 64%, #000 64%);
     -webkit-mask-mode: alpha;
     animation: progress 2s 0.5s forwards;
+    content: "";
+    height: 100%;
+    left: 0;
+    mask: radial-gradient(at 50% 50%, #0000 64%, #000 64%);
+    mask-mode: alpha;
+    position: absolute;
+    top: 0;
+    width: 100%;
 }
 
 .score-value.green::before {
@@ -85,10 +84,10 @@
 }
 
 .score-value::after {
+    color: var(--color-wild-seal);
     content: attr(aria-valuenow) '%';
     font-family: var(--font-family-regular);
     font-size: 20px;
-    color: var(--color-wild-seal);
 }
 
 .score-value.green::after  { color: var(--green); }
@@ -101,8 +100,8 @@
     }
 
     .score-value {
-        width: 120px;
         height: 120px;
+        width: 120px;
     }
 
     .score-value::after {

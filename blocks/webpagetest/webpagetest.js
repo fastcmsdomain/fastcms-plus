@@ -9,7 +9,6 @@ const WEBPAGETEST_CONFIG = {
     poor: 'red',
   },
 };
-
 function getScoreClass(score) {
   if (score >= 90) return WEBPAGETEST_CONFIG.SCORE_CLASSES.good;
   if (score >= 50) return WEBPAGETEST_CONFIG.SCORE_CLASSES.average;

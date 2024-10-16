@@ -3,7 +3,6 @@
 This block fetches and displays Google Lighthouse scores for the current page using the PageSpeed Insights API.
 
 ## Usage
-
 To use this block, simply add it to your Franklin page:
 
 | Web Page Test |
