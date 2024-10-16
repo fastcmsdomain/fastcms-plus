@@ -63,3 +63,4 @@ export default async function decorate(block) {
     block.innerHTML = '<p>Unable to fetch Lighthouse scores.</p>';
   }
 }
+
