@@ -137,3 +137,25 @@
         font-size: var(--body-font-size-m);
     }
 }
+
+.webpagetest .strategy-scores {
+    display: grid;
+    gap: var(--spacing-m);
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: var(--spacing-l);
+}
+
+.webpagetest .strategy-scores::before {
+    content: attr(class);
+    grid-column: 1 / -1;
+    color: var(--color-white);
+    font-size: var(--body-font-size-m);
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+@media (width >= 900px) {
+    .webpagetest .strategy-scores {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

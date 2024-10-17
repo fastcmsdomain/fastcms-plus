@@ -15,13 +15,13 @@ function getScoreClass(score) {
   return WEBPAGETEST_CONFIG.SCORE_CLASSES.poor;
 }
 
-async function fetchLighthouseScores(url, apiKey) {
+async function fetchLighthouseScores(url, apiKey, strategy) {
   const params = new URLSearchParams({
     url,
     key: apiKey,
+    strategy,
   });
 
-  // Add categories as separate parameters
   WEBPAGETEST_CONFIG.CATEGORIES.forEach(category => {
     params.append('category', category);
   });
@@ -41,7 +41,7 @@ async function fetchLighthouseScores(url, apiKey) {
   }
 }
 
-function createScoreElement(category, score) {
+function createScoreElement(category, score, strategy) {
   const scoreValue = Math.round(score * 100);
   const scoreClass = getScoreClass(scoreValue);
 
@@ -52,25 +52,16 @@ function createScoreElement(category, score) {
           ${scoreValue}
         </h3>
         <h4>${category}</h4>
+        <p>${strategy}</p>
       </div>
     </div>
   `;
 }
 
 export default async function decorate(block) {
-  // Log the entire block HTML for debugging
-  console.log('Block HTML:', block.innerHTML);
-
-  // Log all div elements and their content
-  const allDivs = block.querySelectorAll('div');
-  console.log('All divs:', Array.from(allDivs).map(div => ({ content: div.textContent, html: div.innerHTML })));
-
-  // Try to find the API key
-  const apiKeyElement = Array.from(allDivs).find(div => div.textContent.trim());
-  console.log('API Key Element:', apiKeyElement ? apiKeyElement.outerHTML : 'Not found');
-
-  const apiKey = apiKeyElement?.textContent.trim();
-  console.log('Extracted API Key:', apiKey);
+  const divs = block.querySelectorAll('div');
+  const apiKey = divs[0]?.textContent.trim();
+  const options = divs[1]?.textContent.trim().toLowerCase().split(',') || ['desktop', 'mobile'];
 
   if (!apiKey) {
     block.innerHTML = '<p>Please provide a valid Google PageSpeed Insights API key in the block content.</p>';
@@ -82,16 +73,20 @@ export default async function decorate(block) {
 
   let url = window.location.href;
   
-  // If we're on a local or development environment, use a known public URL
   if (url.includes('localhost') || url.includes('internal-domain')) {
-    url = 'https://www.adobe.com'; // Or any other public URL you want to test
+    url = 'https://www.adobe.com';
   }
 
   try {
-    const scores = await fetchLighthouseScores(url, apiKey);
-    block.innerHTML = WEBPAGETEST_CONFIG.CATEGORIES.map(category => 
-      createScoreElement(category, scores[category].score)
-    ).join('');
+    for (const strategy of options) {
+      if (strategy === 'desktop' || strategy === 'mobile') {
+        const scores = await fetchLighthouseScores(url, apiKey, strategy);
+        const strategyScores = WEBPAGETEST_CONFIG.CATEGORIES.map(category => 
+          createScoreElement(category, scores[category].score, strategy)
+        ).join('');
+        block.innerHTML += `<div class="strategy-scores ${strategy}">${strategyScores}</div>`;
+      }
+    }
   } catch (error) {
     if (error.message.includes('API key expired') || error.message.includes('API_KEY_INVALID')) {
       block.innerHTML = '<p>The provided API key is invalid or has expired. Please update your API key.</p>';
