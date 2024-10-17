@@ -41,20 +41,32 @@ async function fetchLighthouseScores(url, apiKey, strategy) {
   }
 }
 
-function createScoreElement(category, score, strategy) {
+function createScoreElement(category, score) {
   const scoreValue = Math.round(score * 100);
   const scoreClass = getScoreClass(scoreValue);
 
   return `
-    <div class="column">
+    <td>
       <div class="score">
         <h3 class="score-value ${scoreClass}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${scoreValue}" style="--value:${scoreValue}">
           ${scoreValue}
         </h3>
         <h4>${category}</h4>
-        <p>${strategy}</p>
       </div>
-    </div>
+    </td>
+  `;
+}
+
+function createScoreTable(scores, strategy) {
+  return `
+    <table class="strategy-scores ${strategy}">
+      <caption>${strategy.charAt(0).toUpperCase() + strategy.slice(1)} Scores</caption>
+      <tr>
+        ${WEBPAGETEST_CONFIG.CATEGORIES.map(category => 
+          createScoreElement(category, scores[category].score)
+        ).join('')}
+      </tr>
+    </table>
   `;
 }
 
@@ -81,10 +93,7 @@ export default async function decorate(block) {
     for (const strategy of options) {
       if (strategy === 'desktop' || strategy === 'mobile') {
         const scores = await fetchLighthouseScores(url, apiKey, strategy);
-        const strategyScores = WEBPAGETEST_CONFIG.CATEGORIES.map(category => 
-          createScoreElement(category, scores[category].score, strategy)
-        ).join('');
-        block.innerHTML += `<div class="strategy-scores ${strategy}">${strategyScores}</div>`;
+        block.innerHTML += createScoreTable(scores, strategy);
       }
     }
   } catch (error) {

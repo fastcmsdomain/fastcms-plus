@@ -159,3 +159,36 @@
         grid-template-columns: repeat(4, 1fr);
     }
 }
+
+.webpagetest table.strategy-scores {
+  width: 100%;
+  margin-bottom: var(--spacing-l);
+  border-collapse: separate;
+  border-spacing: var(--spacing-m);
+}
+
+.webpagetest table.strategy-scores caption {
+  color: var(--color-white);
+  font-size: var(--body-font-size-l);
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: var(--spacing-s);
+}
+
+.webpagetest table.strategy-scores td {
+  text-align: center;
+  vertical-align: top;
+}
+
+@media (max-width: 768px) {
+  .webpagetest table.strategy-scores tr {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .webpagetest table.strategy-scores td {
+    flex: 0 0 45%;
+    margin-bottom: var(--spacing-m);
+  }
+}

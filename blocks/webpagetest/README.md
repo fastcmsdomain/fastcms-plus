@@ -21,6 +21,14 @@ The second row specifies the test options. You can use "desktop", "mobile", or b
 3. In the second cell, specify the test options (desktop, mobile, or both).
 4. The API key will be automatically removed from the visible content when the scores are displayed.
 
+## Display
+
+The block will display two separate tables:
+1. Desktop Scores: Shows Lighthouse scores for the desktop version of the page.
+2. Mobile Scores: Shows Lighthouse scores for the mobile version of the page.
+
+Each table includes scores for Performance, Accessibility, Best Practices, and SEO.
+
 ## Styling
 
 The block uses CSS variables for colors and animations. You can customize the appearance by modifying the CSS file.
