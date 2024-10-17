@@ -20,15 +20,17 @@ Replace `YOUR_API_KEY_HERE` with your actual Google PageSpeed Insights API key.
 
 ## Display
 
-The block will display a table showing Lighthouse scores for the desktop version of the page, including scores for Performance, Accessibility, Best Practices, and SEO.
+The block will initially show a loading state with spinning green circles for each category. Once the API call is completed, it will display a table showing Lighthouse scores for the desktop version of the page, including scores for Performance, Accessibility, Best Practices, and SEO.
 
 ## Styling
 
-The block uses CSS variables for colors and animations. You can customize the appearance by modifying the CSS file.
+The block uses CSS variables for colors and animations. You can customize the appearance by modifying the CSS file. The loading state is styled with a spinning green circle animation.
 
 ## Behavior
 
-The block makes an API call to Google PageSpeed Insights to fetch Lighthouse scores for performance, accessibility, best practices, and SEO for the desktop version of the page. It then displays these scores as circular progress indicators.
+1. On page load, the block displays loading indicators for each category.
+2. The block makes an API call to Google PageSpeed Insights to fetch Lighthouse scores for performance, accessibility, best practices, and SEO for the desktop version of the page.
+3. Once the scores are fetched, the loading indicators are replaced with the actual scores, displayed as circular progress indicators.
 
 ## Dependencies
 
@@ -36,7 +38,7 @@ This block requires a valid Google PageSpeed Insights API key.
 
 ## Accessibility
 
-The block uses ARIA attributes to ensure screen readers can interpret the score values correctly.
+The block uses ARIA attributes to ensure screen readers can interpret the score values correctly. The loading state is also designed to be accessible.
 
 ## Troubleshooting
 

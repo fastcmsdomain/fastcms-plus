@@ -61,7 +61,18 @@ function createScoreElement(category, score) {
   `;
 }
 
-function createScoreTable(scores) {
+function createLoadingElement(category) {
+  return `
+    <td>
+      <div class="score loading">
+        <div class="loading-circle"></div>
+        <h4>${category}</h4>
+      </div>
+    </td>
+  `;
+}
+
+function createScoreTable(scores, isLoading = false) {
   // eslint-disable-next-line no-console
   console.log('Creating table for desktop with scores:', scores);
   return `
@@ -69,7 +80,7 @@ function createScoreTable(scores) {
       <caption>Desktop Scores</caption>
       <tr>
         ${WEBPAGETEST_CONFIG.CATEGORIES.map(category => 
-          createScoreElement(category, scores[category].score)
+          isLoading ? createLoadingElement(category) : createScoreElement(category, scores[category].score)
         ).join('')}
       </tr>
     </table>
@@ -93,6 +104,9 @@ export default async function decorate(block) {
   // Remove all existing content from the block
   block.innerHTML = '';
 
+  // Add loading placeholder
+  block.innerHTML = createScoreTable(null, true);
+
   let url = window.location.href;
   
   if (url.includes('localhost') || url.includes('internal-domain')) {
@@ -111,7 +125,7 @@ export default async function decorate(block) {
     const tableHTML = createScoreTable(scores);
     // eslint-disable-next-line no-console
     console.log('Table HTML for desktop:', tableHTML);
-    block.innerHTML += tableHTML;
+    block.innerHTML = tableHTML;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error in decorate function:', error);
