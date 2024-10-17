@@ -48,7 +48,7 @@ function createScoreElement(category, score) {
   return `
     <div class="column">
       <div class="score">
-        <h3 class="score-value ${scoreClass}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${scoreValue}" style="${scoreValue}">
+        <h3 class="score-value ${scoreClass}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${scoreValue}" style="--value:${scoreValue}">
           ${scoreValue}
         </h3>
         <h4>${category}</h4>
