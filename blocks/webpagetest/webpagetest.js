@@ -1,5 +1,5 @@
 const WEBPAGETEST_CONFIG = {
-  API_KEY: 'AIzaSyDB9DYkn6l40rKU9bHDpmqT7vzbicA6sjk', // Replace with your actual API key
+  API_KEY: 'AIzaSyDB9DYkn6l40rKU9bHDpmqT7vzbicA6sjk', // Verify this key
   API_URL: 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed',
   ERROR_MESSAGE: 'Error fetching Lighthouse scores:',
   CATEGORIES: ['performance', 'accessibility', 'best-practices', 'seo'],
@@ -24,12 +24,17 @@ async function fetchLighthouseScores(url) {
 
   try {
     const response = await fetch(`${WEBPAGETEST_CONFIG.API_URL}?${params}`);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
     const data = await response.json();
     return data.lighthouseResult.categories;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(WEBPAGETEST_CONFIG.ERROR_MESSAGE, error);
+    // eslint-disable-next-line no-console
+    console.error('Request URL:', `${WEBPAGETEST_CONFIG.API_URL}?${params}`);
     return null;
   }
 }
@@ -51,7 +56,13 @@ function createScoreElement(category, score) {
 }
 
 export default async function decorate(block) {
-  const url = window.location.href;
+  let url = window.location.href;
+  
+  // If we're on a local or development environment, use a known public URL
+  if (url.includes('localhost') || url.includes('internal-domain')) {
+    url = 'https://www.adobe.com'; // Or any other public URL you want to test
+  }
+
   const scores = await fetchLighthouseScores(url);
 
   if (scores) {
@@ -59,7 +70,6 @@ export default async function decorate(block) {
       createScoreElement(category, scores[category].score)
     ).join('');
   } else {
-    block.innerHTML = '<p>Unable to fetch Lighthouse scores.</p>';
+    block.innerHTML = '<p>Unable to fetch Lighthouse scores. Please check the console for more details.</p>';
   }
 }
-
