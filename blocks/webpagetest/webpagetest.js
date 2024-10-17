@@ -19,7 +19,11 @@ async function fetchLighthouseScores(url, apiKey) {
   const params = new URLSearchParams({
     url,
     key: apiKey,
-    category: WEBPAGETEST_CONFIG.CATEGORIES.join(','),
+  });
+
+  // Add categories as separate parameters
+  WEBPAGETEST_CONFIG.CATEGORIES.forEach(category => {
+    params.append('category', category);
   });
 
   try {
