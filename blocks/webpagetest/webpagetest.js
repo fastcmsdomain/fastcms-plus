@@ -1,5 +1,4 @@
 const WEBPAGETEST_CONFIG = {
-  API_KEY: 'AIzaSyDB9DYkn6l40rKU9bHDpmqT7vzbicA6sjk', // Verify this key
   API_URL: 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed',
   ERROR_MESSAGE: 'Error fetching Lighthouse scores:',
   CATEGORIES: ['performance', 'accessibility', 'best-practices', 'seo'],
@@ -9,16 +8,17 @@ const WEBPAGETEST_CONFIG = {
     poor: 'red',
   },
 };
+
 function getScoreClass(score) {
   if (score >= 90) return WEBPAGETEST_CONFIG.SCORE_CLASSES.good;
   if (score >= 50) return WEBPAGETEST_CONFIG.SCORE_CLASSES.average;
   return WEBPAGETEST_CONFIG.SCORE_CLASSES.poor;
 }
 
-async function fetchLighthouseScores(url) {
+async function fetchLighthouseScores(url, apiKey) {
   const params = new URLSearchParams({
     url,
-    key: WEBPAGETEST_CONFIG.API_KEY,
+    key: apiKey,
     category: WEBPAGETEST_CONFIG.CATEGORIES.join(','),
   });
 
@@ -33,9 +33,7 @@ async function fetchLighthouseScores(url) {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(WEBPAGETEST_CONFIG.ERROR_MESSAGE, error);
-    // eslint-disable-next-line no-console
-    console.error('Request URL:', `${WEBPAGETEST_CONFIG.API_URL}?${params}`);
-    return null;
+    throw error;
   }
 }
 
@@ -56,6 +54,12 @@ function createScoreElement(category, score) {
 }
 
 export default async function decorate(block) {
+  const apiKey = block.querySelector('div:first-child')?.textContent.trim();
+  if (!apiKey) {
+    block.innerHTML = '<p>Please provide a valid Google PageSpeed Insights API key.</p>';
+    return;
+  }
+
   let url = window.location.href;
   
   // If we're on a local or development environment, use a known public URL
@@ -63,13 +67,16 @@ export default async function decorate(block) {
     url = 'https://www.adobe.com'; // Or any other public URL you want to test
   }
 
-  const scores = await fetchLighthouseScores(url);
-
-  if (scores) {
+  try {
+    const scores = await fetchLighthouseScores(url, apiKey);
     block.innerHTML = WEBPAGETEST_CONFIG.CATEGORIES.map(category => 
       createScoreElement(category, scores[category].score)
     ).join('');
-  } else {
-    block.innerHTML = '<p>Unable to fetch Lighthouse scores. Please check the console for more details.</p>';
+  } catch (error) {
+    if (error.message.includes('API key expired') || error.message.includes('API_KEY_INVALID')) {
+      block.innerHTML = '<p>The provided API key is invalid or has expired. Please update your API key.</p>';
+    } else {
+      block.innerHTML = '<p>Unable to fetch Lighthouse scores. Please check the console for more details.</p>';
+    }
   }
 }

@@ -3,14 +3,19 @@
 This block fetches and displays Google Lighthouse scores for the current page using the PageSpeed Insights API.
 
 ## Usage
-To use this block, simply add it to your Franklin page:
+
+To use this block, add it to your Franklin page and provide your Google PageSpeed Insights API key:
 
 | Web Page Test |
 |---------------|
+| YOUR_API_KEY_HERE |
+
+Replace `YOUR_API_KEY_HERE` with your actual Google PageSpeed Insights API key.
 
 ## Authoring
 
-No additional authoring is required. The block will automatically fetch and display the Lighthouse scores for the current page.
+1. Obtain a Google PageSpeed Insights API key from the Google Cloud Console.
+2. Add the block to your page and insert your API key in the first cell of the table.
 
 ## Styling
 
@@ -22,8 +27,12 @@ The block makes an API call to Google PageSpeed Insights to fetch Lighthouse sco
 
 ## Dependencies
 
-This block requires an API key for Google PageSpeed Insights. Make sure to replace `YOUR_API_KEY_HERE` in the JavaScript file with your actual API key.
+This block requires a valid Google PageSpeed Insights API key.
 
 ## Accessibility
 
 The block uses ARIA attributes to ensure screen readers can interpret the score values correctly.
+
+## Troubleshooting
+
+If you see an error message about an invalid or expired API key, please obtain a new API key from the Google Cloud Console and update the block.
