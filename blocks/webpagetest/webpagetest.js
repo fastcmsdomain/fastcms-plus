@@ -54,16 +54,27 @@ function createScoreElement(category, score) {
 }
 
 export default async function decorate(block) {
-  const apiKeyElement = block.querySelector('.score');
+  // Log the entire block HTML for debugging
+  console.log('Block HTML:', block.innerHTML);
+
+  // Log all div elements and their content
+  const allDivs = block.querySelectorAll('div');
+  console.log('All divs:', Array.from(allDivs).map(div => ({ content: div.textContent, html: div.innerHTML })));
+
+  // Try to find the API key
+  const apiKeyElement = Array.from(allDivs).find(div => div.textContent.trim());
+  console.log('API Key Element:', apiKeyElement ? apiKeyElement.outerHTML : 'Not found');
+
   const apiKey = apiKeyElement?.textContent.trim();
-  
+  console.log('Extracted API Key:', apiKey);
+
   if (!apiKey) {
-    block.innerHTML = '<p>Please provide a valid Google PageSpeed Insights API key.</p>';
+    block.innerHTML = '<p>Please provide a valid Google PageSpeed Insights API key in the block content.</p>';
     return;
   }
 
-  // Remove the API key from the visible content
-  apiKeyElement.parentElement.remove();
+  // Remove all existing content from the block
+  block.innerHTML = '';
 
   let url = window.location.href;
   
@@ -83,5 +94,7 @@ export default async function decorate(block) {
     } else {
       block.innerHTML = '<p>Unable to fetch Lighthouse scores. Please check the console for more details.</p>';
     }
+    // eslint-disable-next-line no-console
+    console.error('Error details:', error);
   }
 }

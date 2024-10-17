@@ -15,7 +15,7 @@ Replace `YOUR_API_KEY_HERE` with your actual Google PageSpeed Insights API key.
 ## Authoring
 
 1. Obtain a Google PageSpeed Insights API key from the Google Cloud Console.
-2. Add the block to your page and insert your API key in the first cell of the table, as shown in the Usage section.
+2. Add the block to your page and insert your API key as plain text in the first cell of the table, as shown in the Usage section.
 3. The API key will be automatically removed from the visible content when the scores are displayed.
 
 ## Styling
