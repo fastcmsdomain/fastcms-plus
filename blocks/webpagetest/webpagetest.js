@@ -54,14 +54,16 @@ function createScoreElement(category, score) {
 }
 
 export default async function decorate(block) {
-  const apiKey = block.querySelector('.score')?.textContent.trim();
+  const apiKeyElement = block.querySelector('.score');
+  const apiKey = apiKeyElement?.textContent.trim();
+  
   if (!apiKey) {
     block.innerHTML = '<p>Please provide a valid Google PageSpeed Insights API key.</p>';
     return;
   }
 
   // Remove the API key from the visible content
-  block.querySelector('.column')?.remove();
+  apiKeyElement.parentElement.remove();
 
   let url = window.location.href;
   
