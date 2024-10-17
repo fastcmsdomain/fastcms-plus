@@ -27,15 +27,16 @@ async function fetchLighthouseScores(url, apiKey, strategy) {
   });
 
   try {
+    console.log(`Fetching scores for ${strategy} strategy...`);
     const response = await fetch(`${WEBPAGETEST_CONFIG.API_URL}?${params}`);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
     const data = await response.json();
+    console.log(`Received data for ${strategy}:`, data);
     return data.lighthouseResult.categories;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(WEBPAGETEST_CONFIG.ERROR_MESSAGE, error);
     throw error;
   }
@@ -58,6 +59,7 @@ function createScoreElement(category, score) {
 }
 
 function createScoreTable(scores, strategy) {
+  console.log(`Creating table for ${strategy} with scores:`, scores);
   return `
     <table class="strategy-scores ${strategy}">
       <caption>${strategy.charAt(0).toUpperCase() + strategy.slice(1)} Scores</caption>
@@ -71,9 +73,13 @@ function createScoreTable(scores, strategy) {
 }
 
 export default async function decorate(block) {
+  console.log('Decorating WebPageTest block...');
   const divs = block.querySelectorAll('div');
   const apiKey = divs[0]?.textContent.trim();
   const options = divs[1]?.textContent.trim().toLowerCase().split(',') || ['desktop', 'mobile'];
+
+  console.log('API Key:', apiKey);
+  console.log('Options:', options);
 
   if (!apiKey) {
     block.innerHTML = '<p>Please provide a valid Google PageSpeed Insights API key in the block content.</p>';
@@ -89,20 +95,25 @@ export default async function decorate(block) {
     url = 'https://www.adobe.com';
   }
 
+  console.log('URL to test:', url);
+
   try {
     for (const strategy of options) {
       if (strategy === 'desktop' || strategy === 'mobile') {
+        console.log(`Fetching scores for ${strategy}...`);
         const scores = await fetchLighthouseScores(url, apiKey, strategy);
-        block.innerHTML += createScoreTable(scores, strategy);
+        console.log(`Scores received for ${strategy}:`, scores);
+        const tableHTML = createScoreTable(scores, strategy);
+        console.log(`Table HTML for ${strategy}:`, tableHTML);
+        block.innerHTML += tableHTML;
       }
     }
   } catch (error) {
+    console.error('Error in decorate function:', error);
     if (error.message.includes('API key expired') || error.message.includes('API_KEY_INVALID')) {
       block.innerHTML = '<p>The provided API key is invalid or has expired. Please update your API key.</p>';
     } else {
       block.innerHTML = '<p>Unable to fetch Lighthouse scores. Please check the console for more details.</p>';
     }
-    // eslint-disable-next-line no-console
-    console.error('Error details:', error);
   }
 }
