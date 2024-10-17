@@ -74,9 +74,9 @@ function createScoreTable(scores, strategy) {
 
 export default async function decorate(block) {
   console.log('Decorating WebPageTest block...');
-  const divs = block.querySelectorAll('div');
-  const apiKey = divs[0]?.textContent.trim();
-  const optionsText = divs[1]?.textContent.trim().toLowerCase() || 'desktop,mobile';
+  const rows = block.querySelectorAll(':scope > div');
+  const apiKey = rows[0]?.querySelector('div')?.textContent.trim();
+  const optionsText = rows[1]?.querySelector('div')?.textContent.trim().toLowerCase() || 'desktop,mobile';
   const options = optionsText.split(',').map(option => option.trim());
 
   console.log('API Key:', apiKey);
