@@ -76,7 +76,8 @@ export default async function decorate(block) {
   console.log('Decorating WebPageTest block...');
   const divs = block.querySelectorAll('div');
   const apiKey = divs[0]?.textContent.trim();
-  const options = divs[1]?.textContent.trim().toLowerCase().split(',') || ['desktop', 'mobile'];
+  const optionsText = divs[1]?.textContent.trim().toLowerCase() || 'desktop,mobile';
+  const options = optionsText.split(',').map(option => option.trim());
 
   console.log('API Key:', apiKey);
   console.log('Options:', options);
