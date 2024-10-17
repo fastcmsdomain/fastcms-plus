@@ -15,11 +15,11 @@ function getScoreClass(score) {
   return WEBPAGETEST_CONFIG.SCORE_CLASSES.poor;
 }
 
-async function fetchLighthouseScores(url, apiKey, strategy) {
+async function fetchLighthouseScores(url, apiKey) {
   const params = new URLSearchParams({
     url,
     key: apiKey,
-    strategy,
+    strategy: 'desktop',
   });
 
   WEBPAGETEST_CONFIG.CATEGORIES.forEach(category => {
@@ -27,16 +27,19 @@ async function fetchLighthouseScores(url, apiKey, strategy) {
   });
 
   try {
-    console.log(`Fetching scores for ${strategy} strategy...`);
+    // eslint-disable-next-line no-console
+    console.log('Fetching scores for desktop strategy...');
     const response = await fetch(`${WEBPAGETEST_CONFIG.API_URL}?${params}`);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
     const data = await response.json();
-    console.log(`Received data for ${strategy}:`, data);
+    // eslint-disable-next-line no-console
+    console.log('Received data for desktop:', data);
     return data.lighthouseResult.categories;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(WEBPAGETEST_CONFIG.ERROR_MESSAGE, error);
     throw error;
   }
@@ -58,11 +61,12 @@ function createScoreElement(category, score) {
   `;
 }
 
-function createScoreTable(scores, strategy) {
-  console.log(`Creating table for ${strategy} with scores:`, scores);
+function createScoreTable(scores) {
+  // eslint-disable-next-line no-console
+  console.log('Creating table for desktop with scores:', scores);
   return `
-    <table class="strategy-scores ${strategy}">
-      <caption>${strategy.charAt(0).toUpperCase() + strategy.slice(1)} Scores</caption>
+    <table class="strategy-scores desktop">
+      <caption>Desktop Scores</caption>
       <tr>
         ${WEBPAGETEST_CONFIG.CATEGORIES.map(category => 
           createScoreElement(category, scores[category].score)
@@ -73,14 +77,13 @@ function createScoreTable(scores, strategy) {
 }
 
 export default async function decorate(block) {
+  // eslint-disable-next-line no-console
   console.log('Decorating WebPageTest block...');
   const rows = block.querySelectorAll(':scope > div');
   const apiKey = rows[0]?.querySelector('div')?.textContent.trim();
-  const optionsText = rows[1]?.querySelector('div')?.textContent.trim().toLowerCase() || 'desktop,mobile';
-  const options = optionsText.split(',').map(option => option.trim());
 
+  // eslint-disable-next-line no-console
   console.log('API Key:', apiKey);
-  console.log('Options:', options);
 
   if (!apiKey) {
     block.innerHTML = '<p>Please provide a valid Google PageSpeed Insights API key in the block content.</p>';
@@ -96,20 +99,21 @@ export default async function decorate(block) {
     url = 'https://www.adobe.com';
   }
 
+  // eslint-disable-next-line no-console
   console.log('URL to test:', url);
 
   try {
-    for (const strategy of options) {
-      if (strategy === 'desktop' || strategy === 'mobile') {
-        console.log(`Fetching scores for ${strategy}...`);
-        const scores = await fetchLighthouseScores(url, apiKey, strategy);
-        console.log(`Scores received for ${strategy}:`, scores);
-        const tableHTML = createScoreTable(scores, strategy);
-        console.log(`Table HTML for ${strategy}:`, tableHTML);
-        block.innerHTML += tableHTML;
-      }
-    }
+    // eslint-disable-next-line no-console
+    console.log('Fetching scores for desktop...');
+    const scores = await fetchLighthouseScores(url, apiKey);
+    // eslint-disable-next-line no-console
+    console.log('Scores received for desktop:', scores);
+    const tableHTML = createScoreTable(scores);
+    // eslint-disable-next-line no-console
+    console.log('Table HTML for desktop:', tableHTML);
+    block.innerHTML += tableHTML;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error in decorate function:', error);
     if (error.message.includes('API key expired') || error.message.includes('API_KEY_INVALID')) {
       block.innerHTML = '<p>The provided API key is invalid or has expired. Please update your API key.</p>';

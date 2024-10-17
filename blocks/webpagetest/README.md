@@ -1,33 +1,26 @@
 # Web Page Test Block
 
-This block fetches and displays Google Lighthouse scores for the current page using the PageSpeed Insights API.
+This block fetches and displays Google Lighthouse scores for the current page using the PageSpeed Insights API, focusing on desktop performance.
 
 ## Usage
 
-To use this block, add it to your Franklin page and provide your Google PageSpeed Insights API key and test options:
+To use this block, add it to your Franklin page and provide your Google PageSpeed Insights API key:
 
 | Web Page Test |
 |---------------|
 | YOUR_API_KEY_HERE |
-| desktop,mobile |
 
 Replace `YOUR_API_KEY_HERE` with your actual Google PageSpeed Insights API key.
-The second row specifies the test options. You can use "desktop", "mobile", or both separated by a comma.
 
 ## Authoring
 
 1. Obtain a Google PageSpeed Insights API key from the Google Cloud Console.
-2. Add the block to your page and insert your API key as plain text in the first cell of the table.
-3. In the second cell, specify the test options (desktop, mobile, or both).
-4. The API key will be automatically removed from the visible content when the scores are displayed.
+2. Add the block to your page and insert your API key as plain text in the cell of the table.
+3. The API key will be automatically removed from the visible content when the scores are displayed.
 
 ## Display
 
-The block will display two separate tables:
-1. Desktop Scores: Shows Lighthouse scores for the desktop version of the page.
-2. Mobile Scores: Shows Lighthouse scores for the mobile version of the page.
-
-Each table includes scores for Performance, Accessibility, Best Practices, and SEO.
+The block will display a table showing Lighthouse scores for the desktop version of the page, including scores for Performance, Accessibility, Best Practices, and SEO.
 
 ## Styling
 
@@ -35,7 +28,7 @@ The block uses CSS variables for colors and animations. You can customize the ap
 
 ## Behavior
 
-The block makes an API call to Google PageSpeed Insights to fetch Lighthouse scores for performance, accessibility, best practices, and SEO. It then displays these scores as circular progress indicators.
+The block makes an API call to Google PageSpeed Insights to fetch Lighthouse scores for performance, accessibility, best practices, and SEO for the desktop version of the page. It then displays these scores as circular progress indicators.
 
 ## Dependencies
 
